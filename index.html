@@ -1,0 +1,130 @@
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --navy:#0B1157;--blue:#002BFF;--cyan:#78DCFF;--opal:#FED7FF;
+    --lgray:#F7F7F7;--mgray:#C8C8C8;--dgray:#545454;--white:#ffffff;
+  }
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--lgray);color:var(--navy);min-height:600px}
+  .topbar{background:var(--navy);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .topbar-left{flex:1;min-width:180px}
+  .topbar-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:2px}
+  .topbar-title{font-size:17px;font-weight:700;color:#fff}
+  .topbar-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px}
+  .dash-tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .dash-tab{padding:6px 13px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.65);background:transparent;transition:all 0.15s;white-space:nowrap}
+  .dash-tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+  .dash-tab:hover:not(.active){border-color:var(--cyan);color:var(--cyan)}
+  .dash-tab .cnt{margin-left:5px;background:rgba(255,255,255,0.15);border-radius:10px;padding:1px 6px;font-size:10px}
+  .toolbar{background:var(--white);border-bottom:1px solid #e8e8e8;padding:10px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .filter-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--dgray);margin-right:4px;flex-shrink:0}
+  .chip{padding:5px 13px;border-radius:20px;border:1.5px solid var(--mgray);font-size:11px;font-weight:600;cursor:pointer;background:#fff;color:var(--dgray);transition:all 0.15s;white-space:nowrap}
+  .chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+  .chip:hover:not(.active){border-color:var(--blue);color:var(--blue)}
+  .search-wrap{position:relative;margin-left:auto}
+  .search-wrap input{padding:7px 12px 7px 32px;border:1.5px solid var(--mgray);border-radius:8px;font-size:12px;color:var(--navy);background:var(--lgray);outline:none;width:200px;transition:border 0.15s}
+  .search-wrap input:focus{border-color:var(--blue);background:#fff}
+  .search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--dgray)}
+  .content{padding:18px 24px}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  .stat-card{background:var(--white);border-radius:10px;padding:14px 16px;border:1px solid #eee;display:flex;align-items:center;gap:12px}
+  .stat-accent{width:4px;height:36px;border-radius:3px;flex-shrink:0}
+  .stat-val{font-size:22px;font-weight:700;color:var(--navy);line-height:1}
+  .stat-lbl{font-size:10px;color:var(--dgray);margin-top:3px;text-transform:uppercase;letter-spacing:0.8px}
+  .table-wrap{background:var(--white);border-radius:12px;overflow:hidden;border:1px solid #eee}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead tr{background:var(--navy)}
+  thead th{padding:11px 14px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.8);white-space:nowrap}
+  tbody tr[data-idx]{border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background 0.12s}
+  tbody tr[data-idx]:hover{background:#f4f7ff}
+  tbody tr[data-idx].expanded{background:#eef1ff}
+  tbody tr.detail-row{background:#f7f8ff;cursor:default}
+  tbody tr.detail-row:hover{background:#f7f8ff}
+  td{padding:11px 14px;vertical-align:middle}
+  .metric-name{font-weight:600;color:var(--navy);font-size:13px}
+  .metric-sub{font-size:11px;color:var(--dgray);margin-top:2px;font-weight:400}
+  .ds-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;white-space:nowrap}
+  .ds-CRM{background:#E8EEFF;color:#002BFF}
+  .ds-LO{background:#E1FBF6;color:#0B6E56}
+  .ds-WD{background:#FFF5E0;color:#7a4400}
+  .ds-Calc{background:var(--opal);color:#6B0080}
+  .ds-Static{background:#F0F0F0;color:#444}
+  .expand-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--mgray);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--dgray);transition:all 0.15s;user-select:none;flex-shrink:0;line-height:1}
+  .expand-btn.open{background:var(--blue);border-color:var(--blue);color:#fff;transform:rotate(45deg)}
+  .detail-panel{padding:14px 18px 14px 40px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .detail-box{background:#fff;border-radius:8px;padding:12px 14px;border:1px solid #e8e8e8}
+  .d-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dgray);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+  .d-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+  .calc-block{font-family:'Courier New',monospace;font-size:11px;background:#f0f4ff;padding:9px 11px;border-radius:6px;border-left:3px solid var(--blue);color:#1a1a6e;line-height:1.6;word-break:break-word}
+  .d-text{font-size:12px;line-height:1.6;color:#333}
+  .footer{padding:10px 24px;background:var(--white);border-top:1px solid #eee;display:flex;align-items:center;gap:20px;font-size:11px;color:var(--dgray)}
+  .footer strong{color:var(--navy)}
+  .empty{text-align:center;padding:56px 20px;display:none}
+  .empty .ei{font-size:32px;margin-bottom:10px}
+</style>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://raw.githubusercontent.com/ayadav-tab/Tableau-Landing-Page/refs/heads/main/tableau.extensions.1.latest.js"></script>
+<script src="script.js"></script>
+<div>
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-eyebrow">Tableau Glossary</div>
+      <div class="topbar-title" id="dashTitle">Direct Response Fundraising</div>
+      <div class="topbar-sub" id="dashMeta">Owner: Fundraising Team &nbsp;·&nbsp; Source: CRM &nbsp;·&nbsp; Refresh: Daily 5:30 PM ET</div>
+    </div>
+    <div class="dash-tabs">
+      <div class="dash-tab active" onclick="switchDash('dr',this)">Direct Response<span class="cnt">8</span></div>
+      <div class="dash-tab" onclick="switchDash('ev',this)">Events<span class="cnt">14</span></div>
+      <div class="dash-tab" onclick="switchDash('mg',this)">Major Gifts<span class="cnt">5</span></div>
+      <div class="dash-tab" onclick="switchDash('pg',this)">Planned Giving<span class="cnt">7</span></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <span class="filter-label">Source</span>
+    <div class="chip active" onclick="setFilter('ALL',this)">All</div>
+    <div class="chip" onclick="setFilter('CRM',this)">CRM</div>
+    <div class="chip" onclick="setFilter('LO',this)">Luminate Online</div>
+    <div class="chip" onclick="setFilter('WD',this)">Workday</div>
+    <div class="chip" onclick="setFilter('Calculated Field',this)">Calculated</div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="metricSearch" placeholder="Search metrics…" oninput="filterRows()">
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-accent" style="background:var(--blue)"></div><div><div class="stat-val" id="s1">8</div><div class="stat-lbl">Total Metrics</div></div></div>
+      <div class="stat-card"><div class="stat-accent" style="background:var(--cyan)"></div><div><div class="stat-val" id="s2">1</div><div class="stat-lbl">Data Sources</div></div></div>
+      <div class="stat-card"><div class="stat-accent" style="background:#0B6E56"></div><div><div class="stat-val" id="s3" style="font-size:14px;padding-top:4px">Daily 5:30 PM</div><div class="stat-lbl">Refresh</div></div></div>
+      <div class="stat-card"><div class="stat-accent" style="background:var(--opal)"></div><div><div class="stat-val" id="s4" style="font-size:14px;padding-top:4px">Yearly</div><div class="stat-lbl">Static Doc</div></div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table id="glossaryTable">
+        <thead>
+          <tr>
+            <th style="width:24px"></th>
+            <th>Metric / Viz Name</th>
+            <th style="width:130px">Data Source</th>
+            <th>Business Definition</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="empty" id="emptyState">
+        <div class="ei">◎</div>
+        <div style="font-size:14px;font-weight:600;color:var(--navy)">No metrics match</div>
+        <div style="font-size:12px;color:var(--dgray);margin-top:5px">Adjust your search or filter.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Showing <strong id="shownCount">8</strong> of <strong id="totalCount">8</strong> metrics</span>
+    <span style="margin-left:auto">Dashboard Owner (Tech): <strong>BI Reporting Team</strong></span>
+    <span>Dept: <strong>Fundraising</strong></span>
+  </div>
+</div>
+
