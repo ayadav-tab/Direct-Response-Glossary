@@ -29,7 +29,7 @@
 
     let currentFilter = 'ALL', expandedRows = new Set();
 
-    function setFilter(f, el) {
+      window.setFilter = function(f, el) {
       currentFilter = f;
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
